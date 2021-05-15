@@ -1,0 +1,20 @@
+version: '3.4'
+
+services:
+  mrm_database:
+    image: mariadb:10.5
+    environment:
+      MARIADB_RANDOM_ROOT_PASSWORD: 1
+    volumes:
+      - mrm_dbdata:/var/lib/mysql
+    
+  modularrecipemanager:
+    image: ${DOCKER_REGISTRY-}modularrecipemanager
+    depends_on:
+      - mrm_database
+    build:
+      context: .
+      dockerfile: ModularRecipeManager/Dockerfile
+
+volumes:
+  mrm_dbdata:
