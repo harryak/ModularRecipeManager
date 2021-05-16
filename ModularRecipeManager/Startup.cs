@@ -11,15 +11,26 @@ namespace ModularRecipeManager
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
+        private ServerVersion ServerVersion { get; }
+
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+
+            ServerVersion = new MariaDbServerVersion(new Version(10, 5, 0));
+        }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-        public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+        public void ConfigureServices(IServiceCollection services)
         {
-            var serverVersion = new MariaDbServerVersion(new Version(10, 5, 0));
+            services.AddControllers();
 
-            services.AddDbContextPool<ApplicationDbContext>(
+            services.AddDbContextPool<RecipeManagerDBContext>(
                 dbContextOptions => dbContextOptions
-                    .UseMySql(configuration.GetConnectionString("mrm-recipes"), serverVersion)
+                    .UseMySql(Configuration.GetConnectionString("mrm-recipes"), ServerVersion)
                     .EnableSensitiveDataLogging()
                     .EnableDetailedErrors() //TODO: remove for production
             );

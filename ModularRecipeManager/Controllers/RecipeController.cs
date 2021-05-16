@@ -5,6 +5,11 @@ namespace ModularRecipeManager.Controllers
 {
     public class RecipeController : Controller
     {
+        private readonly RecipeManagerDBContext _dbContext;
+
+        public RecipeController(RecipeManagerDBContext dBContext)
+            => _dbContext = dBContext;
+
         // GET: RecipeController
         public ActionResult Index()
         {
